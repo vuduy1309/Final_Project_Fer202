@@ -53,7 +53,7 @@ export default function ProductDetail() {
       const newChat = await createChat(user.id, seller.id, "someProductId");
       navigate(`/chat?chatId=${newChat.id}`);
     }
-  }
+  };
 
   useEffect(() => {
     const fetchSellerData = async () => {
@@ -212,10 +212,14 @@ export default function ProductDetail() {
           <div>
             <div className="flex items-center gap-2 mb-2">
               <Badge variant="outline">{product.brand}</Badge>
-              {product.total_rate && product.sold > 0 && (<div className="flex items-center">
-                <span className="text-yellow-500 mr-1">★</span>
-                <span>{Math.round(10 * product.total_rate / product.sold) / 10}</span>
-              </div>)}
+              {product.total_rate && product.sold > 0 && (
+                <div className="flex items-center">
+                  <span className="text-yellow-500 mr-1">★</span>
+                  <span>
+                    {Math.round((10 * product.total_rate) / product.sold) / 10}
+                  </span>
+                </div>
+              )}
             </div>
             <h1 className="text-3xl font-bold mb-2">{product.title}</h1>
             <div className="text-muted-foreground mb-4">
@@ -241,18 +245,7 @@ export default function ProductDetail() {
               )}
             </div>
           </div>
-          {
-            seller && <Card>
-              <CardContent className="p-4 flex items-center justify-between">
-                <div>
-                  <p className="font-bold text-lg">{seller.name}</p>
-                  <p className="text-sm text-gray-500">{seller.email}</p>
-                </div>
-                <MessageCircle className="h-6 w-6 cursor-pointer"
-                  onClick={handleClickChat} />
-              </CardContent>
-            </Card>
-          }
+
           <Separator />
 
           <div>
@@ -314,6 +307,59 @@ export default function ProductDetail() {
 
           {/* Rate and Comment Section */}
           <div className="space-y-6">
+            {seller && (
+              <Card>
+                <CardContent className="p-4 flex items-center justify-between">
+                  <div className="flex items-center justify-between gap-5">
+                    <Avatar className="w-20 h-20 border-1">
+                      <AvatarImage src={seller.avatarUrl} />
+                      <AvatarFallback>
+                        {seller.name.substring(0, 2).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col justify-between items-start gap-3">
+                      <div className="text-start">
+                        <p className="font-bold text-lg">
+                          {seller.storeInfo.name}
+                        </p>
+                        {/* <p className="text-sm text-gray-500">{seller.email}</p> */}
+                      </div>
+                      <button
+                        style={{
+                          padding: "10px",
+                          border: "1px solid black",
+                          outline: "none",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          gap: "5px",
+                          cursor: "pointer",
+                        }}
+                        onClick={handleClickChat}
+                      >
+                        <MessageCircle className="h-6 w-6" /> Chat now
+                      </button>
+                    </div>
+                    <div className="w-[1px] h-20 bg-gray-200 mx-4" />
+                    <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm text-gray-600">
+                      <div className="flex gap-2 items-center">
+                        <strong>Score rating:</strong>
+                        <span className="font-medium">
+                          {seller.storeInfo.rating}
+                        </span>
+                        <span className="text-yellow-500">★</span>
+                      </div>
+                      <div className="flex gap-2 items-center">
+                        <strong>Total sales:</strong>
+                        <span className="font-medium">
+                          {seller.storeInfo.totalSales}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
             <h2 className="text-2xl font-semibold mb-4">Customer Reviews</h2>
 
             {/* Display reviews */}
@@ -329,10 +375,10 @@ export default function ProductDetail() {
                         <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-sm font-medium text-gray-500">
                           {review.username
                             ? review.username
-                              .split(" ")
-                              .map((name) => name[0])
-                              .join("")
-                              .toUpperCase()
+                                .split(" ")
+                                .map((name) => name[0])
+                                .join("")
+                                .toUpperCase()
                             : "?"}
                         </div>
                         <span className="font-medium text-sm">
@@ -345,7 +391,7 @@ export default function ProductDetail() {
                           <span
                             key={i}
                             className={
-                              i < (product.total_rate / product.sold | 0)
+                              i < ((product.total_rate / product.sold) | 0)
                                 ? "text-yellow-500"
                                 : "text-gray-300"
                             }
